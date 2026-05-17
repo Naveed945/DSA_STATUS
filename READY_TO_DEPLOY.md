@@ -14,6 +14,7 @@ Your DSA Progress Dashboard is fully configured and ready to deploy!
 - ✅ `fetch-notion-data.js` — Notion API fetcher (Node.js)
 
 ### Configuration
+
 - ✅ `.github/workflows/sync-notion-data.yml` — GitHub Actions workflow (runs every 10 min)
 - ✅ `package.json` — Project metadata
 - ✅ `.gitignore` — Git ignore rules
