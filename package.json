@@ -1,0 +1,8 @@
+{
+  "name": "dsa-progress-dashboard",
+  "version": "2.0.0",
+  "description": "DSA Progress Dashboard with GitHub Actions + Notion sync",
+  "scripts": {
+    "fetch": "node fetch-notion-data.js"
+  }
+}
