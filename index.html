@@ -258,6 +258,9 @@
   const DATA_FILE  = "data.json";
   const REFRESH_MS = 10 * 60 * 1000;
 
+  // ?section=Arrays_ => single section embed mode for Notion
+  const FILTER_SECTION = new URLSearchParams(window.location.search).get("section");
+
   let limits = {};
   let lastData = {};
   let countdownSec = 600;
@@ -288,21 +291,43 @@
     return "#2a2a35";
   }
 
+  function applyEmbedMode() {
+    document.querySelector(".header").style.display         = "none";
+    document.querySelector(".summary").style.display        = "none";
+    document.querySelector(".overall-wrap").style.display   = "none";
+    document.querySelector(".status-bar").style.display     = "none";
+    document.querySelector(".sections-title").style.display = "none";
+    document.querySelector(".footer").style.display         = "none";
+    document.querySelector(".page").style.padding           = "0.5rem";
+    document.body.style.background                          = "transparent";
+    document.body.style.minHeight                           = "unset";
+  }
+
   function render(sectionsData) {
     const grid = document.getElementById("section-grid");
 
-    // Preserve open state
+    if (FILTER_SECTION) applyEmbedMode();
+
+    // Preserve open state across re-renders
     const openSections = new Set();
     grid.querySelectorAll(".sec.open").forEach(el => openSections.add(el.dataset.name));
-
     grid.innerHTML = "";
 
     let totalCount = 0, totalLimit = 0, doneCount = 0;
 
-    SECTIONS.forEach((s, i) => {
+    // Show all sections or just one in embed mode
+    const visibleSections = FILTER_SECTION
+            ? SECTIONS.filter(s => s.name === FILTER_SECTION)
+            : SECTIONS;
+
+    // Auto-open in embed mode
+    if (FILTER_SECTION && visibleSections.length) {
+      openSections.add(visibleSections[0].name);
+    }
+
+    visibleSections.forEach((s) => {
       const lim = getLimit(s.name);
       const sectionData = sectionsData?.[s.name] || {};
-      // Support both old format (number) and new format ({ total, subHeadings })
       const cnt = typeof sectionData === "number" ? sectionData : (sectionData.total ?? 0);
       const subHeadings = typeof sectionData === "object" ? (sectionData.subHeadings || {}) : {};
 
@@ -312,30 +337,26 @@
       if (pct >= 100) doneCount++;
 
       const badgeClass = pct >= 100 ? "badge-done" : pct > 0 ? "badge-wip" : "badge-ns";
-      const badgeText  = pct >= 100 ? "done" : pct > 0 ? "active" : "—";
+      const badgeText  = pct >= 100 ? "done" : pct > 0 ? "active" : "-";
       const color = getBarColor(pct);
       const isOpen = openSections.has(s.name);
+      const globalIdx = SECTIONS.findIndex(x => x.name === s.name);
 
-      // Build sub-heading rows
       const subEntries = Object.entries(subHeadings);
-      let subHTML = "";
-      if (subEntries.length > 0) {
-        subHTML = subEntries.map(([subName, subCnt]) => {
-          const subPct = lim > 0 ? Math.min(100, Math.round((subCnt / lim) * 100)) : 0;
-          return `
-          <div class="sub-row">
-            <div class="sub-top">
-              <span class="sub-name">${subName}</span>
-              <span class="sub-count">${subCnt} toggles</span>
-            </div>
-            <div class="sub-bar-bg">
-              <div class="sub-bar-fill" style="width:${subPct}%;background:${color}"></div>
-            </div>
-          </div>`;
-        }).join("");
-      } else {
-        subHTML = `<div class="no-subs">No sub-headings found</div>`;
-      }
+      let subHTML = subEntries.length > 0
+              ? subEntries.map(([subName, subCnt]) => {
+                const subPct = lim > 0 ? Math.min(100, Math.round((subCnt / lim) * 100)) : 0;
+                return `<div class="sub-row">
+              <div class="sub-top">
+                <span class="sub-name">${subName}</span>
+                <span class="sub-count">${subCnt} toggles</span>
+              </div>
+              <div class="sub-bar-bg">
+                <div class="sub-bar-fill" style="width:${subPct}%;background:${color}"></div>
+              </div>
+            </div>`;
+              }).join("")
+              : `<div class="no-subs">No sub-headings found</div>`;
 
       const div = document.createElement("div");
       div.className = "sec" + (pct >= 100 ? " complete" : "") + (isOpen ? " open" : "");
@@ -343,11 +364,11 @@
 
       div.innerHTML = `
       <div class="sec-header">
-        <span class="sec-num">${String(i+1).padStart(2,'0')}</span>
+        <span class="sec-num">${String(globalIdx + 1).padStart(2,'0')}</span>
         <span class="sec-name" title="${s.name}">${s.name}</span>
         <span class="sec-badge ${badgeClass}">${badgeText}</span>
         <span class="sec-pct" style="color:${color}">${pct}%</span>
-        <span class="sec-chevron">▼</span>
+        <span class="sec-chevron">v</span>
       </div>
       <div class="sec-bar-wrap">
         <div class="sec-bar-bg">
@@ -367,12 +388,7 @@
       </div>
     `;
 
-      // Toggle expand on header click
-      div.querySelector(".sec-header").addEventListener("click", () => {
-        div.classList.toggle("open");
-      });
-
-      // Limit input change — stop propagation so it doesn't toggle expand
+      div.querySelector(".sec-header").addEventListener("click", () => div.classList.toggle("open"));
       div.querySelector(".limit-inp").addEventListener("click", e => e.stopPropagation());
       div.querySelector(".limit-inp").addEventListener("change", function() {
         limits[this.dataset.name] = parseInt(this.value) || 1;
@@ -383,12 +399,14 @@
       grid.appendChild(div);
     });
 
-    const overallPct = totalLimit > 0 ? Math.round((totalCount / totalLimit) * 100) : 0;
-    document.getElementById("c-done").textContent = doneCount;
-    document.getElementById("c-overall").textContent = overallPct + "%";
-    document.getElementById("c-toggles").textContent = totalCount;
-    document.getElementById("overall-pct").textContent = overallPct + "%";
-    document.getElementById("overall-bar").style.width = overallPct + "%";
+    if (!FILTER_SECTION) {
+      const overallPct = totalLimit > 0 ? Math.round((totalCount / totalLimit) * 100) : 0;
+      document.getElementById("c-done").textContent = doneCount;
+      document.getElementById("c-overall").textContent = overallPct + "%";
+      document.getElementById("c-toggles").textContent = totalCount;
+      document.getElementById("overall-pct").textContent = overallPct + "%";
+      document.getElementById("overall-bar").style.width = overallPct + "%";
+    }
   }
 
   async function fetchData() {
@@ -396,16 +414,18 @@
     showError("");
     try {
       const res = await fetch(DATA_FILE + "?" + Date.now(), { cache: "no-store" });
-      if (!res.ok) throw new Error(`HTTP ${res.status} — data.json not found`);
+      if (!res.ok) throw new Error(`HTTP ${res.status} - data.json not found`);
       const json = await res.json();
       lastData = json.sections || {};
       render(lastData);
-      document.getElementById("last-updated").textContent = new Date(json.updatedAt || Date.now()).toLocaleTimeString();
-      setStatus("live", "Live — GitHub Actions sync");
+      if (!FILTER_SECTION) {
+        document.getElementById("last-updated").textContent = new Date(json.updatedAt || Date.now()).toLocaleTimeString();
+        setStatus("live", "Live - GitHub Actions sync");
+        resetCountdown();
+      }
       showError("");
-      resetCountdown();
     } catch (e) {
-      setStatus("error", "Fetch failed — retrying next cycle");
+      setStatus("error", "Fetch failed - retrying next cycle");
       showError("Could not load data.json: " + e.message);
       render(lastData);
     }
@@ -427,7 +447,7 @@
     loadLimits();
     render(null);
     fetchData();
-    setInterval(fetchData, REFRESH_MS);
+    if (!FILTER_SECTION) setInterval(fetchData, REFRESH_MS);
   }
 
   init();
