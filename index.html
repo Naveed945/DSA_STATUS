@@ -1,169 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>DSA Progress — Striver's A2Z</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet" />
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DSA Progress — Striver's A2Z</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #0a0a0f;
-    --surface: #111118;
-    --surface2: #1a1a24;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.13);
-    --text: #f0f0f8;
-    --muted: #6b6b80;
-    --accent: #7c6af7;
-    --accent2: #4fd1a5;
-    --warn: #f5a623;
-    --danger: #f06070;
-    --mono: 'JetBrains Mono', monospace;
-    --sans: 'Syne', sans-serif;
-  }
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --surface2: #1a1a24;
+      --border: rgba(255,255,255,0.07);
+      --border2: rgba(255,255,255,0.13);
+      --text: #f0f0f8;
+      --muted: #6b6b80;
+      --accent: #7c6af7;
+      --accent2: #4fd1a5;
+      --warn: #f5a623;
+      --danger: #f06070;
+      --mono: 'JetBrains Mono', monospace;
+      --sans: 'Syne', sans-serif;
+    }
 
-  html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+              linear-gradient(rgba(124,106,247,0.03) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(124,106,247,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    min-height: 100vh;
-    padding: 0;
-  }
+    .page { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
 
-  /* subtle grid bg */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(124,106,247,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(124,106,247,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
-  }
+    .header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
+    .eyebrow { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
+    .main-title { font-size: clamp(22px, 4vw, 32px); font-weight: 800; color: var(--text); line-height: 1.15; }
+    .main-sub { font-size: 13px; color: var(--muted); margin-top: 5px; font-family: var(--mono); }
+    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .refresh-info { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .countdown { font-family: var(--mono); font-size: 11px; color: var(--accent2); }
 
-  .page { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+    .status-bar { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 2rem; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+    .status-dot.live { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); animation: pulse 2s ease-in-out infinite; }
+    .status-dot.error { background: var(--danger); }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 
-  /* header */
-  .header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 2.5rem; flex-wrap: wrap; }
-  .header-left { }
-  .eyebrow { font-family: var(--mono); font-size: 11px; color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 6px; }
-  .main-title { font-size: clamp(22px, 4vw, 32px); font-weight: 800; color: var(--text); line-height: 1.15; }
-  .main-sub { font-size: 13px; color: var(--muted); margin-top: 5px; font-family: var(--mono); }
+    .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 2rem; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; position: relative; overflow: hidden; }
+    .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); opacity: 0; transition: opacity 0.3s; }
+    .card.accent-green::before { background: var(--accent2); opacity: 1; }
+    .card.accent-purple::before { background: var(--accent); opacity: 1; }
+    .card-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .card-value { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1; }
+    .card-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
 
-  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-  .refresh-info { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-  .countdown { font-family: var(--mono); font-size: 11px; color: var(--accent2); }
+    .overall-wrap { margin-bottom: 2.5rem; }
+    .overall-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .overall-label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .overall-pct { font-family: var(--mono); font-size: 13px; color: var(--accent2); }
+    .big-bar-bg { background: var(--surface2); border-radius: 99px; height: 12px; overflow: hidden; border: 1px solid var(--border); }
+    .big-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 1s cubic-bezier(.4,0,.2,1); }
 
-  /* status bar */
-  .status-bar { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 2rem; }
-  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
-  .status-dot.live { background: var(--accent2); box-shadow: 0 0 6px var(--accent2); animation: pulse 2s ease-in-out infinite; }
-  .status-dot.error { background: var(--danger); }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+    .sections-title { font-size: 11px; font-family: var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+    .section-grid { display: flex; flex-direction: column; gap: 8px; }
 
-  /* config banner */
-  .config-banner {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    border-radius: 12px;
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 2rem;
-    display: none;
-  }
-  .config-banner.show { display: block; }
-  .config-title { font-size: 13px; font-weight: 700; color: var(--warn); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-  .config-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
-  .config-desc code { font-family: var(--mono); font-size: 12px; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; color: var(--accent); }
-  .url-row { display: flex; gap: 8px; }
-  .url-input { flex: 1; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; padding: 8px 12px; font-family: var(--mono); font-size: 12px; color: var(--text); outline: none; }
-  .url-input:focus { border-color: var(--accent); }
-  .url-save { background: var(--accent); color: white; border: none; border-radius: 8px; padding: 8px 16px; font-family: var(--sans); font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
-  .url-save:hover { opacity: 0.85; }
+    /* Main section card */
+    .sec {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .sec:hover { border-color: var(--border2); }
+    .sec.complete { border-color: rgba(79,209,165,0.25); }
 
-  /* summary cards */
-  .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 2rem; }
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px 18px;
-    position: relative;
-    overflow: hidden;
-  }
-  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); opacity: 0; transition: opacity 0.3s; }
-  .card.accent-green::before { background: var(--accent2); opacity: 1; }
-  .card.accent-purple::before { background: var(--accent); opacity: 1; }
-  .card-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-  .card-value { font-size: 28px; font-weight: 800; color: var(--text); line-height: 1; }
-  .card-sub { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
+    /* Section header (clickable to expand) */
+    .sec-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .sec-num { font-family: var(--mono); font-size: 10px; color: var(--muted); width: 20px; flex-shrink: 0; }
+    .sec-name { font-size: 13px; font-weight: 600; flex: 1; min-width: 0; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sec-badge { font-family: var(--mono); font-size: 10px; padding: 2px 8px; border-radius: 99px; flex-shrink: 0; }
+    .badge-done { background: rgba(79,209,165,0.15); color: var(--accent2); }
+    .badge-wip  { background: rgba(124,106,247,0.15); color: var(--accent); }
+    .badge-ns   { background: rgba(107,107,128,0.12); color: var(--muted); }
+    .sec-pct { font-family: var(--mono); font-size: 13px; font-weight: 700; min-width: 38px; text-align: right; flex-shrink: 0; }
+    .sec-chevron { font-size: 10px; color: var(--muted); transition: transform 0.25s; flex-shrink: 0; margin-left: 4px; }
+    .sec.open .sec-chevron { transform: rotate(180deg); }
 
-  /* overall bar */
-  .overall-wrap { margin-bottom: 2.5rem; }
-  .overall-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
-  .overall-label { font-size: 13px; font-weight: 600; color: var(--text); }
-  .overall-pct { font-family: var(--mono); font-size: 13px; color: var(--accent2); }
-  .big-bar-bg { background: var(--surface2); border-radius: 99px; height: 12px; overflow: hidden; border: 1px solid var(--border); }
-  .big-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 1s cubic-bezier(.4,0,.2,1); }
+    /* Progress bar inside header */
+    .sec-bar-wrap { padding: 0 16px 4px; }
+    .sec-bar-bg { background: var(--surface2); border-radius: 99px; height: 4px; overflow: hidden; }
+    .sec-bar-fill { height: 100%; border-radius: 99px; transition: width 1s cubic-bezier(.4,0,.2,1); }
 
-  /* sections */
-  .sections-title { font-size: 11px; font-family: var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
-  .section-grid { display: flex; flex-direction: column; gap: 6px; }
+    /* Footer row with total count + target input */
+    .sec-foot { display: flex; justify-content: space-between; align-items: center; padding: 6px 16px 12px; }
+    .sec-count { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .limit-wrap { display: flex; align-items: center; gap: 6px; }
+    .limit-lbl { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+    .limit-inp {
+      width: 52px; font-family: var(--mono); font-size: 11px;
+      background: var(--surface2); border: 1px solid var(--border2);
+      border-radius: 6px; padding: 2px 6px; color: var(--text);
+      text-align: center; outline: none;
+    }
+    .limit-inp:focus { border-color: var(--accent); }
 
-  .sec {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-    transition: border-color 0.2s;
-  }
-  .sec:hover { border-color: var(--border2); }
-  .sec.complete { border-color: rgba(79,209,165,0.25); }
+    /* Sub-heading panel (collapsible) */
+    .sec-body {
+      display: none;
+      border-top: 1px solid var(--border);
+      background: rgba(0,0,0,0.2);
+      padding: 12px 16px;
+    }
+    .sec.open .sec-body { display: block; }
 
-  .sec-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
-  .sec-num { font-family: var(--mono); font-size: 10px; color: var(--muted); width: 20px; flex-shrink: 0; }
-  .sec-name { font-size: 13px; font-weight: 600; flex: 1; min-width: 0; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .sec-badge { font-family: var(--mono); font-size: 10px; padding: 2px 8px; border-radius: 99px; flex-shrink: 0; }
-  .badge-done { background: rgba(79,209,165,0.15); color: var(--accent2); }
-  .badge-wip  { background: rgba(124,106,247,0.15); color: var(--accent); }
-  .badge-ns   { background: rgba(107,107,128,0.12); color: var(--muted); }
-  .sec-pct { font-family: var(--mono); font-size: 13px; font-weight: 700; min-width: 38px; text-align: right; flex-shrink: 0; }
+    .sub-list { display: flex; flex-direction: column; gap: 8px; }
 
-  .sec-bar-bg { background: var(--surface2); border-radius: 99px; height: 5px; overflow: hidden; margin-bottom: 8px; }
-  .sec-bar-fill { height: 100%; border-radius: 99px; transition: width 1s cubic-bezier(.4,0,.2,1); }
+    .sub-row {
+      display: flex; flex-direction: column; gap: 5px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .sub-top { display: flex; align-items: center; gap: 8px; }
+    .sub-name { font-family: var(--mono); font-size: 11px; color: var(--text); flex: 1; }
+    .sub-count { font-family: var(--mono); font-size: 11px; color: var(--muted); flex-shrink: 0; }
+    .sub-bar-bg { background: rgba(0,0,0,0.3); border-radius: 99px; height: 3px; overflow: hidden; }
+    .sub-bar-fill { height: 100%; border-radius: 99px; background: var(--accent); transition: width 0.8s cubic-bezier(.4,0,.2,1); }
 
-  .sec-foot { display: flex; justify-content: space-between; align-items: center; }
-  .sec-count { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-  .limit-wrap { display: flex; align-items: center; gap: 6px; }
-  .limit-lbl { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-  .limit-inp {
-    width: 52px; font-family: var(--mono); font-size: 11px;
-    background: var(--surface2); border: 1px solid var(--border2);
-    border-radius: 6px; padding: 2px 6px; color: var(--text);
-    text-align: center; outline: none;
-  }
-  .limit-inp:focus { border-color: var(--accent); }
+    .no-subs { font-family: var(--mono); font-size: 11px; color: var(--muted); padding: 4px 0; }
 
-  /* footer */
-  .footer { text-align: center; font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2.5rem; line-height: 1.8; }
-  .footer a { color: var(--accent); text-decoration: none; }
-  .footer a:hover { text-decoration: underline; }
+    .error-box { background: rgba(240,96,112,0.08); border: 1px solid rgba(240,96,112,0.25); border-radius: 10px; padding: 14px 16px; font-family: var(--mono); font-size: 12px; color: var(--danger); margin-bottom: 1.5rem; line-height: 1.6; display: none; }
+    .error-box.show { display: block; }
 
-  /* error */
-  .error-box { background: rgba(240,96,112,0.08); border: 1px solid rgba(240,96,112,0.25); border-radius: 10px; padding: 14px 16px; font-family: var(--mono); font-size: 12px; color: var(--danger); margin-bottom: 1.5rem; line-height: 1.6; display: none; }
-  .error-box.show { display: block; }
+    .footer { text-align: center; font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2.5rem; line-height: 1.8; }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
 
-  @media (max-width: 560px) {
-    .sec-name { font-size: 12px; }
-    .summary { grid-template-columns: repeat(2, 1fr); }
-  }
-</style>
+    @media (max-width: 560px) {
+      .sec-name { font-size: 12px; }
+      .summary { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
 </head>
 <body>
 <div class="page">
@@ -183,14 +182,6 @@
   <div class="status-bar">
     <div class="status-dot" id="status-dot"></div>
     <span id="status-text">Initialising...</span>
-  </div>
-
-  <div class="config-banner" id="config-banner">
-    <div class="config-title">⚙ Notion Configuration</div>
-    <div class="config-desc">
-      To enable live data sync, set <code>NOTION_TOKEN</code> and <code>PAGE_ID</code> in your GitHub Actions secrets.
-      See README for setup instructions.
-    </div>
   </div>
 
   <div class="error-box" id="error-box"></div>
@@ -228,184 +219,218 @@
     </div>
   </div>
 
-  <div class="sections-title">Section breakdown</div>
+  <div class="sections-title">Section breakdown — click to expand sub-headings</div>
   <div class="section-grid" id="section-grid"></div>
 
   <footer class="footer">
     <div>Data source: <a href="https://takeuforward.org/dsa/strivers-a2z-sheet-learn-dsa-a-to-z" target="_blank">Striver's A2Z DSA Sheet</a></div>
-    <div>Notion page fetched via Vercel proxy · refreshes every 10 minutes</div>
+    <div>Notion page fetched via GitHub Actions · refreshes every 10 minutes</div>
   </footer>
 
 </div>
 
 <script>
-const SECTIONS = [
-  { name: "Learn the basics",                  limit: 10 },
-  { name: "Learn Important Sorting Techniques", limit: 10 },
-  { name: "Learn Basic Maths",                  limit: 10 },
-  { name: "Learn Basic Recursion",              limit: 10 },
-  { name: "Learn Basic Hashing",                limit: 10 },
-  { name: "Sort an Array",                      limit: 10 },
-  { name: "Arrays",                             limit: 10 },
-  { name: "Binary Search",                      limit: 10 },
-  { name: "Strings",                            limit: 10 },
-  { name: "Linked List",                        limit: 10 },
-  { name: "Recursion",                          limit: 10 },
-  { name: "Bit Manipulation",                   limit: 10 },
-  { name: "Stack & Queue",                      limit: 10 },
-  { name: "Sliding Window & Two Pointers",      limit: 10 },
-  { name: "Heaps",                              limit: 10 },
-  { name: "Greedy Algorithms",                  limit: 10 },
-  { name: "Binary Trees",                       limit: 10 },
-  { name: "Binary Search Trees",                limit: 10 },
-  { name: "Graphs",                             limit: 10 },
-  { name: "Dynamic Programming",                limit: 10 },
-  { name: "Tries",                              limit: 10 },
-];
+  const SECTIONS = [
+    { name: "Learn the basics",                   limit: 10 },
+    { name: "Learn Important Sorting Techniques",  limit: 10 },
+    { name: "Learn Basic Maths",                   limit: 10 },
+    { name: "Learn Basic Recursion",               limit: 10 },
+    { name: "Learn Basic Hashing",                 limit: 10 },
+    { name: "Sort an Array",                       limit: 10 },
+    { name: "Arrays_",                             limit: 10 },
+    { name: "Binary Search",                       limit: 10 },
+    { name: "Strings_",                            limit: 10 },
+    { name: "Linked List",                         limit: 10 },
+    { name: "Recursion",                           limit: 10 },
+    { name: "Bit Manipulation",                    limit: 10 },
+    { name: "Stack & Queue",                       limit: 10 },
+    { name: "Sliding Window & Two Pointers",       limit: 10 },
+    { name: "Heaps",                               limit: 10 },
+    { name: "Greedy Algorithms",                   limit: 10 },
+    { name: "Binary Trees",                        limit: 10 },
+    { name: "Binary Search Trees",                 limit: 10 },
+    { name: "Graphs",                              limit: 10 },
+    { name: "Dynamic Programming",                 limit: 10 },
+    { name: "Tries",                               limit: 10 },
+  ];
 
-const LIMITS_KEY = "dsa_limits";
-const DATA_FILE = "data.json";
-const REFRESH_MS = 10 * 60 * 1000;
+  const LIMITS_KEY = "dsa_limits";
+  const DATA_FILE  = "data.json";
+  const REFRESH_MS = 10 * 60 * 1000;
 
-let limits = {};
-let lastData = {};
-let countdownSec = 600;
-let countdownTimer = null;
-let refreshTimer = null;
+  let limits = {};
+  let lastData = {};
+  let countdownSec = 600;
+  let countdownTimer = null;
 
-function loadLimits() {
-  try { limits = JSON.parse(localStorage.getItem(LIMITS_KEY) || "{}"); } catch { limits = {}; }
-}
-function saveLimits() {
-  localStorage.setItem(LIMITS_KEY, JSON.stringify(limits));
-}
-function getLimit(name) {
-  return limits[name] ?? SECTIONS.find(s => s.name === name)?.limit ?? 10;
-}
+  function loadLimits() {
+    try { limits = JSON.parse(localStorage.getItem(LIMITS_KEY) || "{}"); } catch { limits = {}; }
+  }
+  function saveLimits() { localStorage.setItem(LIMITS_KEY, JSON.stringify(limits)); }
+  function getLimit(name) { return limits[name] ?? SECTIONS.find(s => s.name === name)?.limit ?? 10; }
 
+  function setStatus(state, msg) {
+    const dot = document.getElementById("status-dot");
+    dot.className = "status-dot" + (state === "live" ? " live" : state === "error" ? " error" : "");
+    document.getElementById("status-text").textContent = msg;
+  }
+  function showError(msg) {
+    const el = document.getElementById("error-box");
+    if (msg) { el.textContent = msg; el.classList.add("show"); }
+    else { el.classList.remove("show"); }
+  }
 
-function setStatus(state, msg) {
-  const dot = document.getElementById("status-dot");
-  const txt = document.getElementById("status-text");
-  dot.className = "status-dot" + (state === "live" ? " live" : state === "error" ? " error" : "");
-  txt.textContent = msg;
-}
+  function getBarColor(pct) {
+    if (pct >= 100) return "#4fd1a5";
+    if (pct >= 60)  return "#7c6af7";
+    if (pct >= 25)  return "#f5a623";
+    if (pct > 0)    return "#888";
+    return "#2a2a35";
+  }
 
-function showError(msg) {
-  const el = document.getElementById("error-box");
-  if (msg) { el.textContent = msg; el.classList.add("show"); }
-  else { el.classList.remove("show"); }
-}
+  function render(sectionsData) {
+    const grid = document.getElementById("section-grid");
 
-function getBarColor(pct) {
-  if (pct >= 100) return "#4fd1a5";
-  if (pct >= 60)  return "#7c6af7";
-  if (pct >= 25)  return "#f5a623";
-  if (pct > 0)    return "#888";
-  return "#2a2a35";
-}
+    // Preserve open state
+    const openSections = new Set();
+    grid.querySelectorAll(".sec.open").forEach(el => openSections.add(el.dataset.name));
 
-function render(sections) {
-  const grid = document.getElementById("section-grid");
-  grid.innerHTML = "";
+    grid.innerHTML = "";
 
-  let totalCount = 0, totalLimit = 0, doneCount = 0;
+    let totalCount = 0, totalLimit = 0, doneCount = 0;
 
-  SECTIONS.forEach((s, i) => {
-    const lim = getLimit(s.name);
-    const cnt = sections?.[s.name] ?? 0;
-    const pct = lim > 0 ? Math.min(100, Math.round((cnt / lim) * 100)) : 0;
-    totalCount += cnt;
-    totalLimit += lim;
-    if (pct >= 100) doneCount++;
+    SECTIONS.forEach((s, i) => {
+      const lim = getLimit(s.name);
+      const sectionData = sectionsData?.[s.name] || {};
+      // Support both old format (number) and new format ({ total, subHeadings })
+      const cnt = typeof sectionData === "number" ? sectionData : (sectionData.total ?? 0);
+      const subHeadings = typeof sectionData === "object" ? (sectionData.subHeadings || {}) : {};
 
-    const badgeClass = pct >= 100 ? "badge-done" : pct > 0 ? "badge-wip" : "badge-ns";
-    const badgeText  = pct >= 100 ? "done" : pct > 0 ? "active" : "—";
-    const color = getBarColor(pct);
+      const pct = lim > 0 ? Math.min(100, Math.round((cnt / lim) * 100)) : 0;
+      totalCount += cnt;
+      totalLimit += lim;
+      if (pct >= 100) doneCount++;
 
-    const div = document.createElement("div");
-    div.className = "sec" + (pct >= 100 ? " complete" : "");
-    div.innerHTML = `
-      <div class="sec-row">
+      const badgeClass = pct >= 100 ? "badge-done" : pct > 0 ? "badge-wip" : "badge-ns";
+      const badgeText  = pct >= 100 ? "done" : pct > 0 ? "active" : "—";
+      const color = getBarColor(pct);
+      const isOpen = openSections.has(s.name);
+
+      // Build sub-heading rows
+      const subEntries = Object.entries(subHeadings);
+      let subHTML = "";
+      if (subEntries.length > 0) {
+        subHTML = subEntries.map(([subName, subCnt]) => {
+          const subPct = lim > 0 ? Math.min(100, Math.round((subCnt / lim) * 100)) : 0;
+          return `
+          <div class="sub-row">
+            <div class="sub-top">
+              <span class="sub-name">${subName}</span>
+              <span class="sub-count">${subCnt} toggles</span>
+            </div>
+            <div class="sub-bar-bg">
+              <div class="sub-bar-fill" style="width:${subPct}%;background:${color}"></div>
+            </div>
+          </div>`;
+        }).join("");
+      } else {
+        subHTML = `<div class="no-subs">No sub-headings found</div>`;
+      }
+
+      const div = document.createElement("div");
+      div.className = "sec" + (pct >= 100 ? " complete" : "") + (isOpen ? " open" : "");
+      div.dataset.name = s.name;
+
+      div.innerHTML = `
+      <div class="sec-header">
         <span class="sec-num">${String(i+1).padStart(2,'0')}</span>
         <span class="sec-name" title="${s.name}">${s.name}</span>
         <span class="sec-badge ${badgeClass}">${badgeText}</span>
         <span class="sec-pct" style="color:${color}">${pct}%</span>
+        <span class="sec-chevron">▼</span>
       </div>
-      <div class="sec-bar-bg">
-        <div class="sec-bar-fill" style="width:${pct}%;background:${color}"></div>
-      </div>
-      <div class="sec-foot">
-        <span class="sec-count">${cnt} / <span class="lim-display-${i}">${lim}</span> toggles</span>
-        <div class="limit-wrap">
-          <span class="limit-lbl">target:</span>
-          <input class="limit-inp" type="number" min="1" max="500" value="${lim}"
-            data-idx="${i}" onchange="onLimitChange(this)" aria-label="Target for ${s.name}" />
+      <div class="sec-bar-wrap">
+        <div class="sec-bar-bg">
+          <div class="sec-bar-fill" style="width:${pct}%;background:${color}"></div>
         </div>
       </div>
+      <div class="sec-foot">
+        <span class="sec-count">${cnt} / ${lim} toggles</span>
+        <div class="limit-wrap">
+          <span class="limit-lbl">target:</span>
+          <input class="limit-inp" type="number" min="1" max="999" value="${lim}"
+            data-name="${s.name}" aria-label="Target for ${s.name}" />
+        </div>
+      </div>
+      <div class="sec-body">
+        <div class="sub-list">${subHTML}</div>
+      </div>
     `;
-    grid.appendChild(div);
-  });
 
-  const overallPct = totalLimit > 0 ? Math.round((totalCount / totalLimit) * 100) : 0;
-  document.getElementById("c-done").textContent = doneCount;
-  document.getElementById("c-overall").textContent = overallPct + "%";
-  document.getElementById("c-toggles").textContent = totalCount;
-  document.getElementById("overall-pct").textContent = overallPct + "%";
-  document.getElementById("overall-bar").style.width = overallPct + "%";
-}
+      // Toggle expand on header click
+      div.querySelector(".sec-header").addEventListener("click", () => {
+        div.classList.toggle("open");
+      });
 
-function onLimitChange(input) {
-  const idx = parseInt(input.dataset.idx);
-  const name = SECTIONS[idx].name;
-  limits[name] = parseInt(input.value) || 1;
-  saveLimits();
-  render(lastData);
-}
+      // Limit input change — stop propagation so it doesn't toggle expand
+      div.querySelector(".limit-inp").addEventListener("click", e => e.stopPropagation());
+      div.querySelector(".limit-inp").addEventListener("change", function() {
+        limits[this.dataset.name] = parseInt(this.value) || 1;
+        saveLimits();
+        render(lastData);
+      });
 
-async function fetchData() {
-  setStatus("idle", "Fetching from GitHub...");
-  showError("");
+      grid.appendChild(div);
+    });
 
-  try {
-    const res = await fetch(DATA_FILE + "?" + Date.now(), { cache: "no-store" });
-    if (!res.ok) {
-      throw new Error(`HTTP ${res.status} - data.json not found`);
-    }
-    const json = await res.json();
-    lastData = json.sections || {};
-    render(lastData);
-    document.getElementById("last-updated").textContent = new Date(json.updatedAt || Date.now()).toLocaleTimeString();
-    setStatus("live", "Live — GitHub Actions sync");
-    showError("");
-    resetCountdown();
-  } catch (e) {
-    setStatus("error", "Fetch failed — retrying next cycle");
-    showError("Could not load data: " + e.message + ". Ensure data.json is present and GitHub Actions workflow is running.");
+    const overallPct = totalLimit > 0 ? Math.round((totalCount / totalLimit) * 100) : 0;
+    document.getElementById("c-done").textContent = doneCount;
+    document.getElementById("c-overall").textContent = overallPct + "%";
+    document.getElementById("c-toggles").textContent = totalCount;
+    document.getElementById("overall-pct").textContent = overallPct + "%";
+    document.getElementById("overall-bar").style.width = overallPct + "%";
   }
-}
 
-function resetCountdown() {
-  countdownSec = REFRESH_MS / 1000;
-  clearInterval(countdownTimer);
-  countdownTimer = setInterval(() => {
-    countdownSec--;
-    const m = String(Math.floor(countdownSec / 60)).padStart(2, "0");
-    const s = String(countdownSec % 60).padStart(2, "0");
-    document.getElementById("countdown").textContent = `${m}:${s}`;
-    if (countdownSec <= 0) { clearInterval(countdownTimer); fetchData(); }
-  }, 1000);
-}
+  async function fetchData() {
+    setStatus("idle", "Fetching from GitHub...");
+    showError("");
+    try {
+      const res = await fetch(DATA_FILE + "?" + Date.now(), { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status} — data.json not found`);
+      const json = await res.json();
+      lastData = json.sections || {};
+      render(lastData);
+      document.getElementById("last-updated").textContent = new Date(json.updatedAt || Date.now()).toLocaleTimeString();
+      setStatus("live", "Live — GitHub Actions sync");
+      showError("");
+      resetCountdown();
+    } catch (e) {
+      setStatus("error", "Fetch failed — retrying next cycle");
+      showError("Could not load data.json: " + e.message);
+      render(lastData);
+    }
+  }
 
-function init() {
-  loadLimits();
-  render(null);
+  function resetCountdown() {
+    countdownSec = REFRESH_MS / 1000;
+    clearInterval(countdownTimer);
+    countdownTimer = setInterval(() => {
+      countdownSec--;
+      const m = String(Math.floor(countdownSec / 60)).padStart(2, "0");
+      const s = String(countdownSec % 60).padStart(2, "0");
+      document.getElementById("countdown").textContent = `${m}:${s}`;
+      if (countdownSec <= 0) { clearInterval(countdownTimer); fetchData(); }
+    }, 1000);
+  }
 
-  fetchData();
-  setInterval(fetchData, REFRESH_MS);
-}
+  function init() {
+    loadLimits();
+    render(null);
+    fetchData();
+    setInterval(fetchData, REFRESH_MS);
+  }
 
-init();
+  init();
 </script>
 </body>
 </html>

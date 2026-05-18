@@ -1,27 +1,167 @@
 {
   "sections": {
-    "Learn the basics": 0,
-    "Learn Important Sorting Techniques": 0,
-    "Learn Basic Maths": 0,
-    "Learn Basic Recursion": 0,
-    "Learn Basic Hashing": 0,
-    "Sort an Array": 0,
-    "Arrays": 0,
-    "Binary Search": 0,
-    "Strings": 0,
-    "Linked List": 0,
-    "Recursion": 0,
-    "Bit Manipulation": 0,
-    "Stack & Queue": 0,
-    "Sliding Window & Two Pointers": 0,
-    "Heaps": 0,
-    "Greedy Algorithms": 0,
-    "Binary Trees": 0,
-    "Binary Search Trees": 0,
-    "Graphs": 0,
-    "Dynamic Programming": 0,
-    "Tries": 0
+    "Learn the basics": {
+      "total": 9,
+      "subHeadings": {
+        "Things to know in C++/Java/Python or any language": 9
+      }
+    },
+    "Learn Important Sorting Techniques": {
+      "total": 1,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 1,
+        "Hard": 0
+      }
+    },
+    "Learn Basic Maths": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Learn Basic Recursion": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Learn Basic Hashing": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Sort an Array": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Arrays_": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Binary Search": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Strings_": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Linked List": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Recursion": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Bit Manipulation": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Stack & Queue": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Sliding Window & Two Pointers": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Heaps": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Greedy Algorithms": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Binary Trees": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Binary Search Trees": {
+      "total": 0,
+      "subHeadings": {}
+    },
+    "Graphs": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Dynamic Programming": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    },
+    "Tries": {
+      "total": 0,
+      "subHeadings": {
+        "Easy": 0,
+        "Medium": 0,
+        "Hard": 0
+      }
+    }
   },
-  "updatedAt": "2024-01-01T00:00:00.000Z"
+  "updatedAt": "2026-05-18T01:30:30.618Z"
 }
-

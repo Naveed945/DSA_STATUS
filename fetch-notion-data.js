@@ -1,68 +1,31 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-
 const NOTION_TOKEN = process.env.NOTION_TOKEN;
 const PAGE_ID = process.env.PAGE_ID || "363bc09fccb2812aab8ac19b355f59fa";
-
-if (!NOTION_TOKEN) {
-  console.error("Error: NOTION_TOKEN environment variable not set");
-  process.exit(1);
-}
+const fs = require("fs");
 
 const headers = {
-  Authorization: `Bearer ${NOTION_TOKEN}`,
+  "Authorization": `Bearer ${NOTION_TOKEN}`,
   "Notion-Version": "2022-06-28",
-  "Content-Type": "application/json",
+  "Content-Type": "application/json"
 };
 
 const SECTIONS = [
-  "Learn the basics",
-  "Learn Important Sorting Techniques",
-  "Learn Basic Maths",
-  "Learn Basic Recursion",
-  "Learn Basic Hashing",
-  "Sort an Array",
-  "Arrays",
-  "Binary Search",
-  "Strings",
-  "Linked List",
-  "Recursion",
-  "Bit Manipulation",
-  "Stack & Queue",
-  "Sliding Window & Two Pointers",
-  "Heaps",
-  "Greedy Algorithms",
-  "Binary Trees",
-  "Binary Search Trees",
-  "Graphs",
-  "Dynamic Programming",
-  "Tries",
+  "Learn the basics", "Learn Important Sorting Techniques", "Learn Basic Maths",
+  "Learn Basic Recursion", "Learn Basic Hashing", "Sort an Array", "Arrays_",
+  "Binary Search", "Strings_", "Linked List", "Recursion", "Bit Manipulation",
+  "Stack & Queue", "Sliding Window & Two Pointers", "Heaps", "Greedy Algorithms",
+  "Binary Trees", "Binary Search Trees", "Graphs", "Dynamic Programming", "Tries",
 ];
 
-async function getBlocks(blockId) {
-  let results = [];
-  let cursor = undefined;
-  do {
-    const url = `https://api.notion.com/v1/blocks/${blockId}/children?page_size=100${cursor ? `&start_cursor=${cursor}` : ""}`;
-    const r = await fetch(url, { headers });
-    if (!r.ok) {
-      const err = await r.json();
-      throw new Error(err.message || "Notion API error");
-    }
-    const data = await r.json();
-    results = results.concat(data.results);
-    cursor = data.has_more ? data.next_cursor : undefined;
-  } while (cursor);
-  return results;
-}
 
-async function countToggles(blockId) {
+//const SUB_HEADING_NAMES = ["Easy", "Medium", "Hard"];
+
+async function countProblems(blockId) {
   let count = 0;
   const blocks = await getBlocks(blockId);
   for (const b of blocks) {
     if (b.type === "toggle") count++;
-    if (b.has_children) count += await countToggles(b.id);
   }
   return count;
 }
@@ -72,46 +35,60 @@ async function main() {
     console.log("Fetching Notion data...");
     const topBlocks = await getBlocks(PAGE_ID);
 
-    let currentSection = null;
-    let sectionBlockIds = {};
-
+    // Step 1: Find each section's heading_2 block id
+    const sectionBlockIds = {};
     for (const block of topBlocks) {
       if (block.type === "heading_2") {
-        const text = (block.heading_2?.rich_text || []).map((t) => t.plain_text).join("");
-        const match = SECTIONS.find((s) => text.includes(s));
-        if (match) {
-          currentSection = match;
-          sectionBlockIds[match] = sectionBlockIds[match] || [];
-        }
-      } else if (currentSection) {
-        sectionBlockIds[currentSection] = sectionBlockIds[currentSection] || [];
-        sectionBlockIds[currentSection].push(block.id);
+        const text = (block.heading_2?.rich_text || []).map(t => t.plain_text).join("");
+        const match = SECTIONS.find(s => text.includes(s));
+        if (match) sectionBlockIds[match] = block.id;
       }
     }
 
+    // Step 2: For each section, find ALL toggles as sub-headings and count their children
     const results = {};
+
     for (const section of SECTIONS) {
-      let count = 0;
-      for (const blockId of sectionBlockIds[section] || []) {
-        const block = topBlocks.find((b) => b.id === blockId);
-        if (block?.type === "toggle") count++;
-        if (block?.has_children) count += await countToggles(blockId);
+      const sectionId = sectionBlockIds[section];
+      if (!sectionId) {
+        results[section] = { total: 0, subHeadings: {} };
+        continue;
       }
-      results[section] = count;
+
+      const children = await getBlocks(sectionId);
+      const sectionResult = { total: 0, subHeadings: {} };
+
+      for (const block of children) {
+        // ✅ Every toggle at this level is a sub-heading (Easy/Medium/Hard or anything)
+        if (block.type !== "toggle") continue;
+
+        const subHeadingName = (block.toggle?.rich_text || []).map(t => t.plain_text).join("").trim() || "(untitled)";
+
+        if (block.has_children) {
+          // ✅ Count toggles inside it — those are the problems
+          const count = await countProblems(block.id);
+          sectionResult.subHeadings[subHeadingName] = (sectionResult.subHeadings[subHeadingName] || 0) + count;
+          sectionResult.total += count;
+        } else {
+          // Toggle exists but has no children, still register it with 0
+          sectionResult.subHeadings[subHeadingName] = sectionResult.subHeadings[subHeadingName] || 0;
+        }
+      }
+
+      results[section] = sectionResult;
+
+      console.log(`\n ${section} — ${sectionResult.total} total`);
+      for (const [sub, cnt] of Object.entries(sectionResult.subHeadings)) {
+     //   console.log(`   📌 ${sub}: ${cnt}`); //to count sub headings
+      }
     }
 
-    const data = {
-      sections: results,
-      updatedAt: new Date().toISOString(),
-    };
-
-    fs.writeFileSync("data.json", JSON.stringify(data, null, 2));
-    console.log("✓ data.json updated successfully");
+    fs.writeFileSync("data.json", JSON.stringify({ sections: results, updatedAt: new Date().toISOString() }, null, 2));
+    console.log("\n✓ data.json updated");
   } catch (e) {
-    console.error("Error fetching Notion data:", e.message);
+    console.error("Error:", e.message);
     process.exit(1);
   }
 }
 
 main();
-
