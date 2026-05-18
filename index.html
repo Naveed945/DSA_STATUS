@@ -260,6 +260,7 @@
 
   // ?section=Arrays_ => single section embed mode for Notion
   const FILTER_SECTION = new URLSearchParams(window.location.search).get("section");
+  const FILTER_VIEW = new URLSearchParams(window.location.search).get("view");
 
   let limits = {};
   let lastData = {};
@@ -302,11 +303,23 @@
     document.body.style.background                          = "transparent";
     document.body.style.minHeight                           = "unset";
   }
+  function applyOverallMode() {
+    document.querySelector(".header").style.display         = "none";
+    document.querySelector(".summary").style.display        = "none";
+    document.querySelector(".status-bar").style.display     = "none";
+    document.querySelector(".sections-title").style.display = "none";
+    document.querySelector(".section-grid").style.display   = "none";
+    document.querySelector(".footer").style.display         = "none";
+    document.querySelector(".page").style.padding           = "1rem 1.5rem";
+    document.body.style.background                          = "transparent";
+    document.body.style.minHeight                           = "unset";
+  }
 
   function render(sectionsData) {
     const grid = document.getElementById("section-grid");
 
     if (FILTER_SECTION) applyEmbedMode();
+    if (FILTER_VIEW === "overall") applyOverallMode();
 
     // Preserve open state across re-renders
     const openSections = new Set();
