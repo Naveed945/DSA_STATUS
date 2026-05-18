@@ -162,6 +162,8 @@
       .sec-name { font-size: 12px; }
       .summary { grid-template-columns: repeat(2, 1fr); }
     }
+    body.overall-mode { background: #0a0a0f !important; }
+    html.overall-mode { background: #0a0a0f !important; }
   </style>
 </head>
 <body>
@@ -311,6 +313,10 @@
     document.querySelector(".section-grid").style.display   = "none";
     document.querySelector(".footer").style.display         = "none";
     document.querySelector(".page").style.padding           = "1rem 1.5rem";
+    document.body.setAttribute("style", "background:#0a0a0f !important; min-height:unset;");
+    document.documentElement.setAttribute("style", "background:#0a0a0f !important;");
+    document.body.classList.add("overall-mode");
+    document.documentElement.classList.add("overall-mode");
     document.body.style.background = "#0a0a0f";
     document.documentElement.style.background = "#0a0a0f";
     document.body.style.minHeight                           = "unset";
